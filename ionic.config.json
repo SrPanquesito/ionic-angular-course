@@ -1,0 +1,7 @@
+{
+  "name": "max-angular",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
