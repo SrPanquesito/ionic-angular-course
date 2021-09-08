@@ -10,13 +10,15 @@ import { PlacesService } from '../places.service';
 
 // Our places we've offer to the app
 export class OffersPage implements OnInit {
-
   offers: Place[];
 
-  constructor(private placesService: PlacesService) { }
+  constructor(private placesService: PlacesService) {}
 
   ngOnInit() {
     this.offers = this.placesService.places;
   }
 
+  onEdit(offerId: string) {
+    console.log('Editing item ', offerId);
+  }
 }
