@@ -11,14 +11,12 @@ import { PlacesService } from '../places.service';
 export class DiscoverPage implements OnInit {
 
   places: Place[];
-  listedPlaces: Place[];
 
   constructor(private placesService: PlacesService, private menuCtrl: MenuController) {
   }
 
   ngOnInit() {
     this.places = this.placesService.places;
-    this.listedPlaces = this.places.slice(1);
   }
 
   ionViewWillEnter() {}
