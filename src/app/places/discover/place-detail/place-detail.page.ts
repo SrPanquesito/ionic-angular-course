@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ModalController, NavController } from '@ionic/angular';
+import {
+  ActionSheetController,
+  ModalController,
+  NavController,
+} from '@ionic/angular';
 import { CreateBookingPage } from 'src/app/bookings/create-booking/create-booking.page';
 import { Place } from '../../place.model';
 import { PlacesService } from '../../places.service';
@@ -11,15 +15,20 @@ import { PlacesService } from '../../places.service';
   styleUrls: ['./place-detail.page.scss'],
 })
 export class PlaceDetailPage implements OnInit {
-
   place: Place;
 
-  constructor(private router: Router, private route: ActivatedRoute,
-    private navCtrl: NavController, private placesService: PlacesService, private modalCtrl: ModalController) { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private navCtrl: NavController,
+    private placesService: PlacesService,
+    private modalCtrl: ModalController,
+    private actionSheetCtrl: ActionSheetController
+  ) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      if(!params.has('placeId')) {
+    this.route.paramMap.subscribe((params) => {
+      if (!params.has('placeId')) {
         this.navCtrl.navigateBack('/places/tabs/discover');
         return;
       }
@@ -29,12 +38,44 @@ export class PlaceDetailPage implements OnInit {
 
   onBookPlace() {
     //this.navCtrl.navigateBack(['/places/tabs/discover']);
-    this.modalCtrl.create({component: CreateBookingPage, componentProps: {selectedPlace: this.place}})
-      .then(elem => {
+    this.actionSheetCtrl.create({
+      header: 'Choose an Action',
+      buttons: [
+        {
+          text: 'Select Date',
+          handler: () => {
+            this.openBookingModal('select');
+          }
+        },
+        {
+          text: 'Random Date',
+          handler: () => {
+            this.openBookingModal('random');
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'destructive'
+        }
+      ],
+    })
+    .then(el => {
+      el.present();
+    });
+  }
+
+  openBookingModal(mode: 'select'|'random') {
+    console.log(mode);
+    this.modalCtrl
+      .create({
+        component: CreateBookingPage,
+        componentProps: { selectedPlace: this.place },
+      })
+      .then((elem) => {
         elem.present();
         return elem.onDidDismiss();
       })
-      .then(resData => {
+      .then((resData) => {
         if (resData.role === 'confirm') {
           console.log('Booked!');
         }
